@@ -212,7 +212,7 @@ The object has 8 vertices, 6 normals and 12 triangles.
 Mesh::Mesh(const Disc &disc) {
     // Vertices
     //nb triangles + 1 point to complete de circle + 1 center point
-    double prec = disc.getPrecision();
+    int prec = disc.getPrecision();
     vertices.resize(prec + 2);
     std::vector<Vector> points = disc.getPoints();
     for (int i = 0; i < prec + 2; i++) {
@@ -232,6 +232,44 @@ Mesh::Mesh(const Disc &disc) {
         AddTriangle(0, i, i+1, 0);
     }
     AddTriangle(0, prec, 1, 0);
+}
+
+Mesh::Mesh(const Cylinder &cylinder) {
+    int     prec = cylinder.getPrecision();
+    auto    points = cylinder.getPoints();
+
+    // Vertices
+    vertices.resize(points.size());
+    for (int i = 0; i < points.size(); i++){
+        vertices[i] = points[i];
+    }
+
+    // Normals
+    //0->center base
+    //1..n->points
+    //n+1->center with height
+    normals.push_back(Vector(0, -1, 0));
+    for (int i = 1; i < points.size()/2; i++) {
+        normals.push_back(Normalized(vertices[i]-vertices[0]));
+    }
+    normals.push_back(Vector(0, 1, 0));
+
+    // Reserve space for the triangle and place them
+    varray.reserve(prec*4*3);
+    narray.reserve(prec*4*3);
+
+    for (int i = 0; i < prec; i++) {
+        AddTriangle(0, i, i+1, 0); //bottom
+        AddTriangle(prec+1, i+prec+1, i+prec+2, prec+2); //top
+
+        AddTriangle(i, i+1, i+prec+1, i);
+        AddTriangle(i+prec+2, i+prec+1, i+1, (i+1)%prec);
+    }
+    AddTriangle(0, prec, 1, 0);
+    AddTriangle(prec+1, (prec+1)*2, prec+2, prec+2);
+
+    AddTriangle(prec, 1, (prec+1)*2, prec);
+    AddTriangle(prec+1, (prec+1)*2, 1, 1);
 }
 
 /*!

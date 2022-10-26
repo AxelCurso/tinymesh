@@ -29,6 +29,7 @@ public slots:
   void UpdateMaterial();
 
   void disc();
+  void cylinder();
 };
 
 #endif

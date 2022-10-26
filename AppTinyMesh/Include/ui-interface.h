@@ -46,6 +46,7 @@ public:
     QPushButton *sphereImplicit;
 
     QPushButton *disc;
+    QPushButton *cylinder;
 
     QWidget *widget_GL;
     QGroupBox *Parameters_groupBox;
@@ -119,6 +120,10 @@ public:
         disc->setObjectName(QString::fromUtf8("sphere"));
         disc->setGeometry(QRect(140, 50, 81, 23));
         disc->setCheckable(false);
+        cylinder = new QPushButton(Objects_groupBox);
+        cylinder->setObjectName(QString::fromUtf8("cylinder"));
+        cylinder->setGeometry(QRect(20, 80, 101, 23));
+        cylinder->setCheckable(false);
 
         hboxLayout->addWidget(Objects_groupBox);
 
@@ -228,6 +233,7 @@ public:
         sphereImplicit->setText(QCoreApplication::translate("Assets", "Sphere Implicit", nullptr));
 
         disc->setText(QCoreApplication::translate("Assets", "Disc", nullptr));
+        cylinder->setText(QCoreApplication::translate("Assets", "Cylinder", nullptr));
 
         Parameters_groupBox->setTitle(QString());
         groupBox_4->setTitle(QCoreApplication::translate("Assets", " Statistics", nullptr));

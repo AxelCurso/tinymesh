@@ -2,6 +2,7 @@
 
 #include "box.h"
 #include "disc.h"
+#include "cylinder.h"
 #include "ray.h"
 #include "mathematics.h"
 
@@ -122,6 +123,7 @@ public:
   // Constructors from core classes
   explicit Mesh(const Box&);
   explicit Mesh(const Disc&);
+  explicit Mesh(const Cylinder&);
 
   void Load(const QString&);
   void SaveObj(const QString&, const QString&) const;

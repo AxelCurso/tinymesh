@@ -35,6 +35,7 @@ void MainWindow::CreateActions()
 	connect(uiw.radioShadingButton_2, SIGNAL(clicked()), this, SLOT(UpdateMaterial()));
 
     connect(uiw.disc, SIGNAL(clicked()), this, SLOT(disc()));
+    connect(uiw.cylinder, SIGNAL(clicked()), this, SLOT(cylinder()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -107,6 +108,18 @@ void MainWindow::ResetCamera()
 
 void MainWindow::disc() {
     Mesh mesh = Mesh(Disc(Vector(0, 0, 0), 3.0, 250));
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::cylinder() {
+    Mesh mesh = Mesh(Cylinder(Vector(0, 0, 0), 3.0, 100, 5.0));
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
