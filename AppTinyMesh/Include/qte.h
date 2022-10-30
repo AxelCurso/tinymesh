@@ -30,6 +30,7 @@ public slots:
 
   void disc();
   void cylinder();
+  void sphere();
 };
 
 #endif

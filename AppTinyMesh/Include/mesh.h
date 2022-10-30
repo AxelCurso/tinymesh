@@ -3,6 +3,7 @@
 #include "box.h"
 #include "disc.h"
 #include "cylinder.h"
+#include "sphere.h"
 #include "ray.h"
 #include "mathematics.h"
 
@@ -124,6 +125,7 @@ public:
   explicit Mesh(const Box&);
   explicit Mesh(const Disc&);
   explicit Mesh(const Cylinder&);
+  explicit Mesh(const Sphere&);
 
   void Load(const QString&);
   void SaveObj(const QString&, const QString&) const;

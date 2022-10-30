@@ -272,6 +272,41 @@ Mesh::Mesh(const Cylinder &cylinder) {
     AddTriangle(prec+1, (prec+1)*2, 1, 1);
 }
 
+Mesh::Mesh(const Sphere &sphere) {
+    int     prec = sphere.getPrecision();
+    auto    points = sphere.getPoints();
+    Vector  center = sphere.getCenter();
+
+    // Vertices
+    vertices.resize(points.size());
+    for (int i = 0; i < points.size(); i++)
+        vertices[i] = points[i];
+
+    // Normals
+    for (auto p : points)
+        normals.push_back(Normalized(p - center));
+
+    // Reserve space for the triangle and place them
+    varray.reserve((prec-1)*prec*2);
+    narray.reserve((prec-1)+prec*2);
+
+    // the center divisions
+    for (int i = 0; i < prec - 2; i++) {
+        // the triangles in a row
+        for (int j = 0; j < prec; j++) {
+            AddTriangle((i*(prec+1))+j, (i*(prec+1))+(j+1), ((i+1)*(prec+1))+j, (i*(prec+1))+j);
+            AddTriangle(((i+1)*(prec+1))+j, (i*(prec+1))+(j+1), ((i+1)*(prec+1))+(j+1), ((i+1)*(prec+1))+j);
+        }
+    }
+    // top and bottom row
+    for (int i = 0; i < prec; i++) {
+        //bottom
+        AddTriangle(points.size()-2, i, (i+1)%(prec+1), points.size()-2);
+        //top
+        AddTriangle(points.size()-1, i+(prec-2)*(prec+1), ((i+1)%(prec+1))+(prec-2)*(prec+1), points.size()-1);
+    }
+}
+
 /*!
 \brief Scale the mesh.
 \param s Scaling factor.

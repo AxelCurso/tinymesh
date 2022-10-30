@@ -36,6 +36,7 @@ void MainWindow::CreateActions()
 
     connect(uiw.disc, SIGNAL(clicked()), this, SLOT(disc()));
     connect(uiw.cylinder, SIGNAL(clicked()), this, SLOT(cylinder()));
+    connect(uiw.sphere, SIGNAL(clicked()), this, SLOT(sphere()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -120,6 +121,18 @@ void MainWindow::disc() {
 
 void MainWindow::cylinder() {
     Mesh mesh = Mesh(Cylinder(Vector(0, 0, 0), 3.0, 100, 5.0));
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::sphere() {
+    Mesh mesh = Mesh(Sphere(Vector(0,0,0), 3.0, 250));
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
