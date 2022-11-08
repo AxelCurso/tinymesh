@@ -307,6 +307,76 @@ Mesh::Mesh(const Sphere &sphere) {
     }
 }
 
+Mesh::Mesh(const Capsule &capsule) {
+    int     prec = capsule.getPrecision();
+    auto    points = capsule.getPoints();
+    Vector  center = capsule.getCenter();
+    double  height = capsule.getHeight();
+    Vector  topCenter = center + Vector(0, height, 0);
+
+    // Vertexes
+    vertices.resize(points.size());
+    for (int i = 0; i < points.size(); i++)
+        vertices[i] = points[i];
+
+    // Normals
+    for (auto p : points)
+        normals.push_back(Normalized(p - center));
+    /*for (int i = 0; i < prec; i++)
+        normals.push_back(Normalized(p - center)); // for top and base of the cylinder
+    for ()*/
+
+    // Reserve sapce for the triangles and place them
+    varray.reserve((prec-1)*2 + 3*prec);
+    narray.reserve((prec-1)*2 + 3*prec);
+
+    //cylinder
+    for (int i = 0; i < prec; i++) {
+        AddTriangle(i, (i+1)%(prec+1), prec+1+i, i);
+        AddTriangle(prec+1+i, (i+1)%(prec+1), prec+1+(i%(prec+1)), prec+1+i);
+    }
+}
+
+Mesh::Mesh(const HeightField &hf) {
+    auto    points = hf.getPoints();
+    auto    height = hf.getHeight();
+    auto    width = hf.getWidth();
+
+    // Vertexes
+    vertices.resize(points.size());
+    for (int i = 0; i < points.size(); i++)
+        vertices[i] = points[i];
+
+    // Normals
+    for (auto p : points) {
+        normals.push_back(Vector(0, -1, 0));
+    }
+
+    // Reserve space for the triangles and place them
+    varray.reserve(((height-1)*(width-1)) * 2);
+    narray.reserve(((height-1)*(width-1)) * 2);
+
+    for (int i = 0; i < height - 1; i++) {
+        for (int j = 0; j < width - 1; j++) {
+            /*
+                1 -- 2
+                |    |
+                |    |
+                3 -- 4
+            */
+            int p1, p2, p3, p4;
+            p1 = (i * width) + j;
+            p2 = (i*width) + j + 1;
+            p3 = ((i+1) * width) + j;
+            p4 = ((i+1) * width) + j + 1;
+            std::cerr << p1 << ", " << p2 << ", " << p3 << ", " << p4 << std::endl;
+
+            AddSmoothTriangle(p1, p1, p3, p3, p4, p4);
+            AddSmoothTriangle(p1, p1, p4, p4, p2, p2);
+        }
+    }
+}
+
 /*!
 \brief Scale the mesh.
 \param s Scaling factor.

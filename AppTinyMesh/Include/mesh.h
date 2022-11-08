@@ -4,6 +4,8 @@
 #include "disc.h"
 #include "cylinder.h"
 #include "sphere.h"
+#include "capsule.h"
+#include "heightField.h"
 #include "ray.h"
 #include "mathematics.h"
 
@@ -126,6 +128,9 @@ public:
   explicit Mesh(const Disc&);
   explicit Mesh(const Cylinder&);
   explicit Mesh(const Sphere&);
+  explicit Mesh(const Capsule&);
+
+  explicit Mesh(const HeightField&);
 
   void Load(const QString&);
   void SaveObj(const QString&, const QString&) const;

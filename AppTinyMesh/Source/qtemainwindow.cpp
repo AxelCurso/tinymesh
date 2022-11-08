@@ -1,6 +1,10 @@
 #include "qte.h"
 #include "implicits.h"
 
+#include "heightField.h"
+
+#include <QFileDialog>
+
 MainWindow::MainWindow()
 {
 	// Chargement de l'interface
@@ -37,6 +41,10 @@ void MainWindow::CreateActions()
     connect(uiw.disc, SIGNAL(clicked()), this, SLOT(disc()));
     connect(uiw.cylinder, SIGNAL(clicked()), this, SLOT(cylinder()));
     connect(uiw.sphere, SIGNAL(clicked()), this, SLOT(sphere()));
+    connect(uiw.capsule, SIGNAL(clicked()), this, SLOT(capsule()));
+
+    connect(uiw.heightField, SIGNAL(clicked()), this, SLOT(heightField()));
+    connect(uiw.loadHF, SIGNAL(clicked()), this, SLOT(loadHF()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -133,6 +141,50 @@ void MainWindow::cylinder() {
 
 void MainWindow::sphere() {
     Mesh mesh = Mesh(Sphere(Vector(0,0,0), 3.0, 250));
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::capsule() {
+    Mesh mesh = Mesh(Capsule(Vector(0,0,0), 3.0, 3.0, 10));
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::heightField() {
+    HeightField hf = HeightField(Vector(0, 0, 0), 0.5);
+    hf.exampleField();
+    //hf.smallExampleField();
+    //hf.mediumExampleField();
+    Mesh mesh = Mesh(hf);
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::loadHF() {
+    HeightField hf(Vector(0, 0, 0), 0.1);
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "../");
+    hf.loadField(fileName.toStdString());
+
+    Mesh mesh = Mesh(hf);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());

@@ -48,6 +48,10 @@ public:
     QPushButton *disc;
     QPushButton *cylinder;
     QPushButton *sphere;
+    QPushButton *capsule;
+    QPushButton *tore;
+    QPushButton *heightField;
+    QPushButton *loadHF;
 
     QWidget *widget_GL;
     QGroupBox *Parameters_groupBox;
@@ -62,6 +66,8 @@ public:
     QRadioButton *radioShadingButton_2;
     QMenuBar *menubar;
     QMenu *menuFile;
+
+    QGroupBox   *gb_hf;
 
     void setupUi(QMainWindow *Assets)
     {
@@ -129,7 +135,22 @@ public:
         sphere->setObjectName(QString::fromUtf8("cylinder"));
         sphere->setGeometry(QRect(140, 80, 81, 23));
         sphere->setCheckable(false);
-
+        capsule = new QPushButton(Objects_groupBox);
+        capsule->setObjectName(QString::fromUtf8("capsule"));
+        capsule->setGeometry(QRect(20, 110, 101, 23));
+        capsule->setCheckable(false);
+        tore = new QPushButton(Objects_groupBox);
+        tore->setObjectName(QString::fromUtf8("tore"));
+        tore->setGeometry(QRect(140, 110, 81, 23));
+        tore->setCheckable(false);
+        heightField = new QPushButton(Objects_groupBox);
+        heightField->setObjectName(QString::fromUtf8("heightField"));
+        heightField->setGeometry(QRect(20, 140, 101, 23));
+        heightField->setCheckable(false);
+        loadHF = new QPushButton(Objects_groupBox);
+        loadHF->setObjectName(QString::fromUtf8("load hf"));
+        loadHF->setGeometry(QRect(140, 140, 81, 23));
+        loadHF->setCheckable(false);
 
         hboxLayout->addWidget(Objects_groupBox);
 
@@ -179,6 +200,10 @@ public:
         radioShadingButton_2->setGeometry(QRect(20, 50, 61, 20));
         radioShadingButton_2->setChecked(false);
 
+        gb_hf = new QGroupBox(Parameters_groupBox);
+        gb_hf->setObjectName(QString::fromUtf8("gb_hf"));
+        gb_hf->setGeometry(QRect(10, 150, 430, 121));
+
         hboxLayout->addWidget(Parameters_groupBox);
 
         Assets->setCentralWidget(centralwidget);
@@ -201,7 +226,7 @@ public:
 
     void retranslateUi(QMainWindow *Assets)
     {
-        Assets->setWindowTitle(QCoreApplication::translate("Assets", "Implicit Terrain", nullptr));
+        Assets->setWindowTitle(QCoreApplication::translate("Assets", "Implicit heightField", nullptr));
         actionExit->setText(QCoreApplication::translate("Assets", "Exit", nullptr));
 #if QT_CONFIG(shortcut)
         actionExit->setShortcut(QCoreApplication::translate("Assets", "Esc", nullptr));
@@ -241,6 +266,10 @@ public:
         disc->setText(QCoreApplication::translate("Assets", "Disc", nullptr));
         cylinder->setText(QCoreApplication::translate("Assets", "Cylinder", nullptr));
         sphere->setText(QCoreApplication::translate("Assets", "Sphere", nullptr));
+        capsule->setText(QCoreApplication::translate("Assets", "Capsule", nullptr));
+        tore->setText(QCoreApplication::translate("Assets", "Tore", nullptr));
+        heightField->setText(QCoreApplication::translate("Assets", "HeightField", nullptr));
+        loadHF->setText(QCoreApplication::translate("Assets", "Load HeightField", nullptr));
 
         Parameters_groupBox->setTitle(QString());
         groupBox_4->setTitle(QCoreApplication::translate("Assets", " Statistics", nullptr));
@@ -252,6 +281,8 @@ public:
         wireframe->setText(QCoreApplication::translate("Assets", "Wireframe", nullptr));
         radioShadingButton_2->setText(QCoreApplication::translate("Assets", "Color", nullptr));
         menuFile->setTitle(QCoreApplication::translate("Assets", "File", nullptr));
+
+        gb_hf->setTitle(QCoreApplication::translate("Assets", "Height Field manipulations", nullptr));
     } // retranslateUi
 
 };

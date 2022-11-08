@@ -31,6 +31,10 @@ public slots:
   void disc();
   void cylinder();
   void sphere();
+  void capsule();
+
+  void heightField();
+  void loadHF();
 };
 
 #endif
