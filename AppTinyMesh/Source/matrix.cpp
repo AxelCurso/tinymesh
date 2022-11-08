@@ -1,7 +1,9 @@
+// MATRIX
+
+// Self include
 #include "matrix.h"
-#include "math.h"
+
 #include <iostream>
-using namespace std;
 
 Matrix::Matrix(){
    for (int i=0;i<3;i++){
@@ -26,53 +28,57 @@ void Matrix::affichage() {
         for (int j=0;j<3;j++){
             std::cout << tab[i][j] << " ";
         }
-        cout << endl;
+        std::cout << std::endl;
    }
 }
 
 Matrix Matrix::operator+(const Matrix& mat){
-    Matrix mat2;
+    Matrix res;
+
     for (int i=0; i<3; i++){
         for(int j=0; j<3; j++){
-            mat2.tab[i][j]=this->tab[i][j]+mat.tab[i][j];
+            res.tab[i][j]=this->tab[i][j]+mat.tab[i][j];
         }
     }
-    return mat2;
+    return res;
 }
 
 Matrix Matrix::operator-(const Matrix &mat){
-    Matrix mat3;
+    Matrix res;
+
     for (int x=0; x<3; x++){
         for(int y=0; y<3; y++){
-            mat3.tab[x][y]=this->tab[x][y]-(mat.tab[x][y]);
+            res.tab[x][y]=this->tab[x][y]-(mat.tab[x][y]);
               }
     }
-    return mat3;
+    return res;
 }
 
 Matrix Matrix::operator*(const double scal){
-    Matrix mat4;
+    Matrix res;
+
     for (int x=0; x<3; x++){
         for(int y=0; y<3; y++){
-            mat4.tab[x][y]=this->tab[x][y]*scal;
+            res.tab[x][y]=this->tab[x][y]*scal;
               }
     }
-    return mat4;
+    return res;
 }
 
 Matrix Matrix::operator*(const Matrix m){
-    Matrix mat5;
-    mat5.tab[0][0] = this->tab[0][0]*m.tab[0][0] + this->tab[0][1]*m.tab[1][0] + this->tab[0][2]*m.tab[2][0];
-    mat5.tab[0][1] = this->tab[0][0]*m.tab[0][1] + this->tab[0][1]*m.tab[1][1] + this->tab[0][2]*m.tab[2][1];
-    mat5.tab[0][2] = this->tab[0][0]*m.tab[0][2] + this->tab[0][1]*m.tab[1][2] + this->tab[0][2]*m.tab[2][2];
-    mat5.tab[1][0] = this->tab[1][0]*m.tab[0][0] + this->tab[1][1]*m.tab[1][0] + this->tab[1][2]*m.tab[2][0];
-    mat5.tab[1][1] = this->tab[1][0]*m.tab[0][1] + this->tab[1][1]*m.tab[1][1] + this->tab[1][2]*m.tab[2][1];
-    mat5.tab[1][2] = this->tab[1][0]*m.tab[0][2] + this->tab[1][1]*m.tab[1][2] + this->tab[1][2]*m.tab[2][2];
-    mat5.tab[2][0] = this->tab[2][0]*m.tab[0][0] + this->tab[2][1]*m.tab[1][0] + this->tab[2][2]*m.tab[2][0];
-    mat5.tab[2][1] = this->tab[2][0]*m.tab[0][1] + this->tab[2][1]*m.tab[1][1] + this->tab[2][2]*m.tab[2][1];
-    mat5.tab[2][2] = this->tab[2][0]*m.tab[0][2] + this->tab[2][1]*m.tab[1][2] + this->tab[2][2]*m.tab[2][2];
+    Matrix res;
 
-    return mat5;
+    res.tab[0][0] = this->tab[0][0]*m.tab[0][0] + this->tab[0][1]*m.tab[1][0] + this->tab[0][2]*m.tab[2][0];
+    res.tab[0][1] = this->tab[0][0]*m.tab[0][1] + this->tab[0][1]*m.tab[1][1] + this->tab[0][2]*m.tab[2][1];
+    res.tab[0][2] = this->tab[0][0]*m.tab[0][2] + this->tab[0][1]*m.tab[1][2] + this->tab[0][2]*m.tab[2][2];
+    res.tab[1][0] = this->tab[1][0]*m.tab[0][0] + this->tab[1][1]*m.tab[1][0] + this->tab[1][2]*m.tab[2][0];
+    res.tab[1][1] = this->tab[1][0]*m.tab[0][1] + this->tab[1][1]*m.tab[1][1] + this->tab[1][2]*m.tab[2][1];
+    res.tab[1][2] = this->tab[1][0]*m.tab[0][2] + this->tab[1][1]*m.tab[1][2] + this->tab[1][2]*m.tab[2][2];
+    res.tab[2][0] = this->tab[2][0]*m.tab[0][0] + this->tab[2][1]*m.tab[1][0] + this->tab[2][2]*m.tab[2][0];
+    res.tab[2][1] = this->tab[2][0]*m.tab[0][1] + this->tab[2][1]*m.tab[1][1] + this->tab[2][2]*m.tab[2][1];
+    res.tab[2][2] = this->tab[2][0]*m.tab[0][2] + this->tab[2][1]*m.tab[1][2] + this->tab[2][2]*m.tab[2][2];
+
+    return res;
 }
 
 /*
@@ -81,53 +87,79 @@ Matrix Matrix::operator*(const Matrix m){
  * |g h i|
 */
 double Matrix::determinant() {
-    double l,n,o,p,q,r;
+    double aei, bfg, cdh, ceg, bdi, afh;
 
-    l = this->tab[0][0]*this->tab[1][1]*this->tab[2][2]; // a*e*i
-    n = this->tab[0][1]*this->tab[1][2]*this->tab[2][0]; // b*f*g
-    o = this->tab[0][2]*this->tab[1][0]*this->tab[2][1]; // c*d*h
+    aei = this->tab[0][0]*this->tab[1][1]*this->tab[2][2];
+    bfg = this->tab[0][1]*this->tab[1][2]*this->tab[2][0];
+    cdh = this->tab[0][2]*this->tab[1][0]*this->tab[2][1];
 
-    p = this->tab[0][2]*this->tab[1][1]*this->tab[2][0]; // c*e*g
-    q = this->tab[0][1]*this->tab[1][0]*this->tab[2][2]; // b*d*i
-    r = this->tab[0][0]*this->tab[1][2]*this->tab[2][1]; // a*f*h
+    ceg = this->tab[0][2]*this->tab[1][1]*this->tab[2][0];
+    bdi = this->tab[0][1]*this->tab[1][0]*this->tab[2][2];
+    afh = this->tab[0][0]*this->tab[1][2]*this->tab[2][1];
 
-    return l+n+o-p-q-r;
+    return aei + bfg + cdh - ceg - bdi - afh;
 }
 
 Matrix Matrix::ajustement(){
-    Matrix ma;
-    ma.tab[0][1]=this->tab[0][1]*-1;
-    ma.tab[1][0]=this->tab[1][0]*-1;
-    ma.tab[1][2]=this->tab[1][2]*-1;
-    ma.tab[2][1]=this->tab[2][1]*-1;
-    return ma;
+    Matrix res;
+
+    res.tab[0][1]=this->tab[0][1]*-1;
+    res.tab[1][0]=this->tab[1][0]*-1;
+    res.tab[1][2]=this->tab[1][2]*-1;
+    res.tab[2][1]=this->tab[2][1]*-1;
+    return res;
 }
 
 //Tourne l'axe Y vers l'axe Z
 Matrix Matrix::rotation_X(int theta){
-    Matrix m2;
-    m2.tab[0][0]=1;m2.tab[0][1]=0;m2.tab[0][2]=0;
-    m2.tab[1][0]=0;m2.tab[1][1]=cos(theta);m2.tab[1][2]=-sin(theta);
-    m2.tab[2][0]=0;m2.tab[2][1]=sin(theta);m2.tab[2][2]=cos(theta);
-    return m2;
+    Matrix res;
+
+    res.tab[0][0]=1;
+    res.tab[0][1]=0;
+    res.tab[0][2]=0;
+
+    res.tab[1][0]=0;
+    res.tab[1][1]=cos(theta);
+    res.tab[1][2]=-sin(theta);
+
+    res.tab[2][0]=0;
+    res.tab[2][1]=sin(theta);
+    res.tab[2][2]=cos(theta);
+    return res;
 }
 
 //Tourne l'axe Z vers l'axe X
 Matrix Matrix::rotation_Y(int theta){
-    Matrix m2;
-    m2.tab[0][0]=cos(theta);m2.tab[0][1]=0;m2.tab[0][2]=sin(theta);
-    m2.tab[1][0]=0;m2.tab[1][1]=1;m2.tab[1][2]=0;
-    m2.tab[2][0]=-sin(theta);m2.tab[2][1]=0;m2.tab[2][2]=cos(theta);
-    return m2;
+    Matrix res;
+
+    res.tab[0][0]=cos(theta);
+    res.tab[0][1]=0;
+    res.tab[0][2]=sin(theta);
+
+    res.tab[1][0]=0;
+    res.tab[1][1]=1;
+    res.tab[1][2]=0;
+
+    res.tab[2][0]=-sin(theta);
+    res.tab[2][1]=0;
+    res.tab[2][2]=cos(theta);
+    return res;
 }
 
 //Tourne l'axe X vers l'axe Y
 Matrix Matrix::rotation_Z(int theta){
-    Matrix m2;
-    m2.tab[0][0]=cos(theta);m2.tab[0][1]=-sin(theta);m2.tab[0][2]=0;
-    m2.tab[1][0]=sin(theta);m2.tab[1][1]=cos(theta);m2.tab[1][2]=0;
-    m2.tab[2][0]=0;m2.tab[2][1]=0;m2.tab[2][2]=1;
-    return m2;
+    Matrix res;
+
+    res.tab[0][0]=cos(theta);
+    res.tab[0][1]=-sin(theta);
+    res.tab[0][2]=0;
+
+    res.tab[1][0]=sin(theta);
+    res.tab[1][1]=cos(theta);
+    res.tab[1][2]=0;
+
+    res.tab[2][0]=0;res.tab[2][1]=0;res.tab[2][2]=1;
+    return res;
 }
 
 
@@ -138,38 +170,45 @@ Matrix Matrix::rotation_Z(int theta){
 */
 
 Matrix Matrix::homotheties(Matrix m, int x, int y, int z) {
+    Matrix tmp(x, 0, 0, 0, y, 0, 0, 0, z);
 
-
-    return m;
+    return m*tmp;
 }
 
 Matrix Matrix::transpose(){
-    Matrix m;
-    m.tab[0][0]=this->tab[0][0];m.tab[1][0]=this->tab[0][1];m.tab[2][0]=this->tab[0][2];
-    m.tab[0][1]=this->tab[1][0];m.tab[1][1]=this->tab[1][1];m.tab[2][1]=this->tab[1][2];
-    m.tab[0][2]=this->tab[2][0];m.tab[1][2]=this->tab[2][1];m.tab[2][2]=this->tab[2][2];
-    return m;
+    Matrix res;
+    res.tab[0][0]=this->tab[0][0];
+    res.tab[0][1]=this->tab[1][0];
+    res.tab[0][2]=this->tab[2][0];;
+
+    res.tab[1][0]=this->tab[0][1];
+    res.tab[1][1]=this->tab[1][1];
+    res.tab[1][2]=this->tab[2][1];
+
+    res.tab[2][0]=this->tab[0][2];
+    res.tab[2][1]=this->tab[1][2];
+    res.tab[2][2]=this->tab[2][2];
+    return res;
 }
 
 Matrix Matrix::inverse(){
-    Matrix m2;
+    Matrix res;
     int det = this->determinant();
     if(det!=0){
 
         Matrix tmp;
-        m2=this->transpose();
+        res=this->transpose();
         //décomposition de m2 en sous matrice 2x2 et calcul de tout les DET
-        tmp.tab[0][0] = m2.tab[1][1]*m2.tab[2][2]-(m2.tab[2][1]*m2.tab[1][2]);
-        tmp.tab[0][1] = m2.tab[1][0]*m2.tab[2][2]-(m2.tab[2][0]*m2.tab[1][2]);
-        tmp.tab[0][2] = m2.tab[1][0]*m2.tab[2][1]-(m2.tab[2][0]*m2.tab[1][1]);
-        tmp.tab[1][0] = m2.tab[0][1]*m2.tab[0][0]-(m2.tab[2][1]*m2.tab[0][2]); //
-        tmp.tab[1][1] = m2.tab[1][0]*m2.tab[2][2]-(m2.tab[2][0]*m2.tab[0][2]);
-        tmp.tab[1][2] = m2.tab[0][0]*m2.tab[2][1]-(m2.tab[2][0]*m2.tab[0][1]);
-        tmp.tab[2][0] = m2.tab[0][1]*m2.tab[1][2]-(m2.tab[1][1]*m2.tab[0][2]);
-        tmp.tab[2][1] = m2.tab[0][0]*m2.tab[1][2]-(m2.tab[1][0]*m2.tab[0][2]);
-        tmp.tab[2][2] = m2.tab[0][0]*m2.tab[1][1]-(m2.tab[1][0]*m2.tab[0][1]);
-        //tmp = tmp.ajustement();
-        //tmp.affichage();
+        tmp.tab[0][0] = res.tab[1][1]*res.tab[2][2]-(res.tab[2][1]*res.tab[1][2]);
+        tmp.tab[0][1] = res.tab[1][0]*res.tab[2][2]-(res.tab[2][0]*res.tab[1][2]);
+        tmp.tab[0][2] = res.tab[1][0]*res.tab[2][1]-(res.tab[2][0]*res.tab[1][1]);
+        tmp.tab[1][0] = res.tab[0][1]*res.tab[0][0]-(res.tab[2][1]*res.tab[0][2]);
+        tmp.tab[1][1] = res.tab[1][0]*res.tab[2][2]-(res.tab[2][0]*res.tab[0][2]);
+        tmp.tab[1][2] = res.tab[0][0]*res.tab[2][1]-(res.tab[2][0]*res.tab[0][1]);
+        tmp.tab[2][0] = res.tab[0][1]*res.tab[1][2]-(res.tab[1][1]*res.tab[0][2]);
+        tmp.tab[2][1] = res.tab[0][0]*res.tab[1][2]-(res.tab[1][0]*res.tab[0][2]);
+        tmp.tab[2][2] = res.tab[0][0]*res.tab[1][1]-(res.tab[1][0]*res.tab[0][1]);
+
         Matrix mInverse;
         for(int i = 0; i<3;i++){
             for (int j = 0; j<3;j++){
@@ -179,5 +218,5 @@ Matrix Matrix::inverse(){
         return mInverse;
     }
 
-    return m2;
+    return res;
 }

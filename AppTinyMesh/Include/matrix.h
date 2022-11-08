@@ -1,9 +1,7 @@
-//MATRIX
+#ifndef MATRIX_H
+#define MATRIX_H
 
-#pragma once
-
-#include <math.h>
-#include <ostream>
+#include "mathematics.h"
 
 class Matrix
 {
@@ -24,7 +22,6 @@ public:
     Matrix operator*(const double scal);
     Matrix operator*(const Matrix m);
 
-    //
     double determinant() ;
     Matrix ajustement();
     Matrix rotation_X(int theta);
@@ -33,6 +30,6 @@ public:
     Matrix homotheties(Matrix m, int x, int y, int z);
     Matrix transpose();
     Matrix inverse();
-
-
 };
+
+#endif // MATRIX_H

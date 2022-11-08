@@ -320,7 +320,7 @@ Mesh::Mesh(const Capsule &capsule) {
         vertices[i] = points[i];
 
     // Normals
-    for (int i = 0; i < prec; i++){
+    for (int i = 0; i < prec; i++)
         normals.push_back(Normalized(vertices[i] - center));//bottom base
     for (int i = 0; i < prec; i++)
         normals.push_back(Normalized(vertices[i+prec] - topCenter));//top base
