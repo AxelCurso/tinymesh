@@ -369,7 +369,7 @@ Mesh::Mesh(const HeightField &hf) {
             p2 = (i*width) + j + 1;
             p3 = ((i+1) * width) + j;
             p4 = ((i+1) * width) + j + 1;
-            std::cerr << p1 << ", " << p2 << ", " << p3 << ", " << p4 << std::endl;
+            //std::cerr << p1 << ", " << p2 << ", " << p3 << ", " << p4 << std::endl;
 
             AddSmoothTriangle(p1, p1, p3, p3, p4, p4);
             AddSmoothTriangle(p1, p1, p4, p4, p2, p2);

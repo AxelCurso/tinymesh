@@ -21,6 +21,7 @@ MainWindow::MainWindow()
 	CreateActions();
 
 	meshWidget->SetCamera(Camera(Vector(10, 0, 0), Vector(0.0, 0.0, 0.0)));
+    m_hf = HeightField(Vector(0,0,0), 0.1);
 }
 
 MainWindow::~MainWindow()
@@ -45,6 +46,9 @@ void MainWindow::CreateActions()
 
     connect(uiw.heightField, SIGNAL(clicked()), this, SLOT(heightField()));
     connect(uiw.loadHF, SIGNAL(clicked()), this, SLOT(loadHF()));
+
+    connect(uiw.hf_up, SIGNAL(clicked()), this, SLOT(upHf()));
+    connect(uiw.hf_down, SIGNAL(clicked()), this, SLOT(downHf()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -164,11 +168,8 @@ void MainWindow::capsule() {
 }
 
 void MainWindow::heightField() {
-    HeightField hf = HeightField(Vector(0, 0, 0), 0.5);
-    hf.exampleField();
-    //hf.smallExampleField();
-    //hf.mediumExampleField();
-    Mesh mesh = Mesh(hf);
+    m_hf.mediumExampleField();
+    Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
@@ -180,11 +181,40 @@ void MainWindow::heightField() {
 }
 
 void MainWindow::loadHF() {
-    HeightField hf(Vector(0, 0, 0), 0.1);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "../");
-    hf.loadField(fileName.toStdString());
+    m_hf.loadField(fileName.toStdString());
 
-    Mesh mesh = Mesh(hf);
+    Mesh mesh = Mesh(m_hf);
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::upHf() {
+    std::cerr << "up hf" << std::endl;
+    m_hf.upScale();
+
+    Mesh mesh = Mesh(m_hf);
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::downHf() {
+    std::cerr << "down hf" << std::endl;
+    m_hf.downScale();
+
+    Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());

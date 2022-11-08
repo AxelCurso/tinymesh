@@ -27,7 +27,7 @@ std::vector<Vector> HeightField::getPoints() const {
 
     for (int i = 0; i < m_field.size(); i++) {
         for (int j = 0; j < m_field.at(i).size(); j++) {
-            toRet.push_back(Vector(j*m_distance, (double)m_field.at(i).at(j)/20.0, i*m_distance));
+            toRet.push_back(Vector(j*m_distance, (double)m_field.at(i).at(j)/m_scale, i*m_distance));
             //toRet.push_back(Vector(j*m_distance, i*m_distance, m_field.at(i).at(j)));
         }
     }

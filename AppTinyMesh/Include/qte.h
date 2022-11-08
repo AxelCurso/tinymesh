@@ -35,6 +35,12 @@ public slots:
 
   void heightField();
   void loadHF();
+
+  void upHf();
+  void downHf();
+
+private:
+  HeightField   m_hf = HeightField(Vector(0,0,0), 0.1);
 };
 
 #endif

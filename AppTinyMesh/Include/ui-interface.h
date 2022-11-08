@@ -68,6 +68,8 @@ public:
     QMenu *menuFile;
 
     QGroupBox   *gb_hf;
+    QPushButton *hf_up;
+    QPushButton *hf_down;
 
     void setupUi(QMainWindow *Assets)
     {
@@ -203,6 +205,14 @@ public:
         gb_hf = new QGroupBox(Parameters_groupBox);
         gb_hf->setObjectName(QString::fromUtf8("gb_hf"));
         gb_hf->setGeometry(QRect(10, 150, 430, 121));
+        hf_up = new QPushButton(gb_hf);
+        hf_up->setObjectName(QString::fromUtf8("upButton"));
+        hf_up->setGeometry(QRect(10, 20, 205, 30));
+        hf_up->setChecked(false);
+        hf_down = new QPushButton(gb_hf);
+        hf_down->setObjectName(QString::fromUtf8("downButton"));
+        hf_down->setGeometry(QRect(215, 20, 205, 30));
+        hf_down->setChecked(false);
 
         hboxLayout->addWidget(Parameters_groupBox);
 
@@ -283,6 +293,8 @@ public:
         menuFile->setTitle(QCoreApplication::translate("Assets", "File", nullptr));
 
         gb_hf->setTitle(QCoreApplication::translate("Assets", "Height Field manipulations", nullptr));
+        hf_up->setText(QCoreApplication::translate("Assets", "Up elevation", nullptr));
+        hf_down->setText(QCoreApplication::translate("Assets", "Down elevation", nullptr));
     } // retranslateUi
 
 };
