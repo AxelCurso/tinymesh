@@ -49,6 +49,7 @@ void MainWindow::CreateActions()
 
     connect(uiw.hf_up, SIGNAL(clicked()), this, SLOT(upHf()));
     connect(uiw.hf_down, SIGNAL(clicked()), this, SLOT(downHf()));
+    connect(uiw.hf_distanceSlider, SIGNAL(sliderReleased()), this, SLOT(distanceSlider()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -169,6 +170,7 @@ void MainWindow::capsule() {
 
 void MainWindow::heightField() {
     m_hf.mediumExampleField();
+    m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
     Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
@@ -183,6 +185,7 @@ void MainWindow::heightField() {
 void MainWindow::loadHF() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "../");
     m_hf.loadField(fileName.toStdString());
+    m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
 
     Mesh mesh = Mesh(m_hf);
 
@@ -213,6 +216,20 @@ void MainWindow::upHf() {
 void MainWindow::downHf() {
     std::cerr << "down hf" << std::endl;
     m_hf.downScale();
+
+    Mesh mesh = Mesh(m_hf);
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::distanceSlider() {
+    m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
 
     Mesh mesh = Mesh(m_hf);
 

@@ -20,6 +20,7 @@ public:
 
     const int getWidth() const { return m_field.at(0).size(); }
     const int getHeight() const { return m_field.size(); }
+    void setDistance(const double &d) { m_distance = d; }
 
     std::vector<Vector> getPoints() const;
     void upScale() { m_scale *= 0.9; }
