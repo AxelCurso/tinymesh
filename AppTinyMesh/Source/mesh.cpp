@@ -258,7 +258,7 @@ Mesh::Mesh(const Cylinder &cylinder) {
     varray.reserve(prec*4*3);
     narray.reserve(prec*4*3);
 
-    for (int i = 0; i < prec; i++) {
+    for (int i = 1; i < prec; i++) {
         AddTriangle(0, i, i+1, 0); //bottom
         AddTriangle(prec+1, i+prec+1, i+prec+2, prec+2); //top
 
@@ -266,10 +266,10 @@ Mesh::Mesh(const Cylinder &cylinder) {
         AddTriangle(i+prec+2, i+prec+1, i+1, (i+1)%prec);
     }
     AddTriangle(0, prec, 1, 0);
-    AddTriangle(prec+1, (prec+1)*2, prec+2, prec+2);
+    AddTriangle(prec+1, prec*2+1, prec+2, prec+2);
 
-    AddTriangle(prec, 1, (prec+1)*2, prec);
-    AddTriangle(prec+1, (prec+1)*2, 1, 1);
+    AddTriangle(prec, 1, prec*2+1, prec);
+    AddTriangle(prec+2, prec*2+1, 1, 1);
 }
 
 Mesh::Mesh(const Sphere &sphere) {
@@ -294,16 +294,16 @@ Mesh::Mesh(const Sphere &sphere) {
     for (int i = 0; i < prec - 2; i++) {
         // the triangles in a row
         for (int j = 0; j < prec; j++) {
-            AddTriangle((i*(prec+1))+j, (i*(prec+1))+(j+1), ((i+1)*(prec+1))+j, (i*(prec+1))+j);
-            AddTriangle(((i+1)*(prec+1))+j, (i*(prec+1))+(j+1), ((i+1)*(prec+1))+(j+1), ((i+1)*(prec+1))+j);
+            AddTriangle((i*prec)+j, (i*prec)+((j+1)%prec), ((i+1)*prec)+j, (i*prec)+j);
+            AddTriangle(((i+1)*prec)+j, (i*prec)+((j+1)%prec), ((i+1)*prec)+((j+1)%prec), ((i+1)*prec)+j);
         }
     }
     // top and bottom row
     for (int i = 0; i < prec; i++) {
         //bottom
-        AddTriangle(points.size()-2, i, (i+1)%(prec+1), points.size()-2);
+        AddTriangle(points.size()-2, i, (i+1)%(prec), points.size()-2);
         //top
-        AddTriangle(points.size()-1, i+(prec-2)*(prec+1), ((i+1)%(prec+1))+(prec-2)*(prec+1), points.size()-1);
+        AddTriangle(points.size()-1, i+(prec-2)*(prec), ((i+1)%(prec))+(prec-2)*(prec), points.size()-1);
     }
 }
 
@@ -320,11 +320,16 @@ Mesh::Mesh(const Capsule &capsule) {
         vertices[i] = points[i];
 
     // Normals
-    for (auto p : points)
-        normals.push_back(Normalized(p - center));
-    /*for (int i = 0; i < prec; i++)
-        normals.push_back(Normalized(p - center)); // for top and base of the cylinder
-    for ()*/
+    for (int i = 0; i < prec; i++){
+        normals.push_back(Normalized(vertices[i] - center));//bottom base
+    for (int i = 0; i < prec; i++)
+        normals.push_back(Normalized(vertices[i+prec] - topCenter));//top base
+    for (int i = 0; i < prec*(prec-1); i++)
+        normals.push_back(Normalized(vertices[i+(2*prec)] - center));//bottom sphere
+    for (int i = 0; i < prec*(prec-1); i++)
+        normals.push_back(Normalized(vertices[i+(prec*(prec+1))] - topCenter));//top sphere
+    normals.push_back(Normalized(vertices[points.size()-2] - center)); //bottom end point
+    normals.push_back(Normalized(vertices[points.size()-1] - topCenter)); //top end point
 
     // Reserve sapce for the triangles and place them
     varray.reserve((prec-1)*2 + 3*prec);
@@ -332,8 +337,32 @@ Mesh::Mesh(const Capsule &capsule) {
 
     //cylinder
     for (int i = 0; i < prec; i++) {
-        AddTriangle(i, (i+1)%(prec+1), prec+1+i, i);
-        AddTriangle(prec+1+i, (i+1)%(prec+1), prec+1+(i%(prec+1)), prec+1+i);
+        AddTriangle(i, (i+1)%prec, prec+((1+i)%prec), i);
+        AddTriangle(i, prec+((1+i)%prec), prec+(i%prec), prec+1+i);
+    }
+    //bottom half sphere
+    for (int i = 0; i < prec-2; i++) {
+        for (int j = 0; j < prec; j++) {
+            AddTriangle((prec*2) + (i*prec) + j, (prec*2) + ((i+1)*prec) + j, (prec*2) + ((i+1)*prec) + ((j+1)%prec), (prec*2) + (i*prec) + j);
+            AddTriangle((prec*2) + (i*prec) + j, (prec*2) + ((i+1)*prec) + ((j+1)%prec), (prec*2) + (i*prec) + ((j+1)%prec), (prec*2) + (i*prec) + j);
+        }
+    }
+    for (int i = 0; i < prec; i++) {
+        AddTriangle(points.size()-2, (prec*2) + i, (prec*2) + ((i+1)%prec), points.size()-2);
+        AddTriangle((i+1)%prec, (prec*2) + (prec-2)*prec + i, (prec*2) + (prec-2)*prec + ((i+1)%prec), i);
+        AddTriangle((i+1)%prec, i, (prec*2) + (prec-2)*prec + i, (i+1)%prec);
+    }
+    //top half sphere
+    for (int i = 0; i < prec-2; i++) {
+        for (int j = 0; j < prec; j++) {
+            AddTriangle(points.size()-3 - (i*prec) - j, points.size()-3 - (i*prec) - ((j+1)%prec), points.size()-3 - ((i+1)*prec) - j, points.size()-3 - (i*prec) - j);
+            AddTriangle(points.size()-3 - (i*prec) - ((j+1)%prec), points.size()-3 - ((i+1)*prec) - j, points.size()-3 - ((i+1)*prec) - ((j+1)%prec), points.size()-3 - (i*prec) - j);
+        }
+    }
+    for (int i = 0; i < prec; i++) {
+        AddTriangle(points.size()-1, points.size()-3 - (prec*(prec-2) ) - i, points.size()-3 - (prec*(prec-2)) - ((i+1)%prec), points.size()-1);
+        AddTriangle(prec+i, points.size()-2-prec + i, points.size()-2-prec + ((i+1)%prec), prec+i);
+        AddTriangle(prec+i, prec+((i+1)%prec), points.size()-2-prec + ((i+1)%prec), prec+i);
     }
 }
 

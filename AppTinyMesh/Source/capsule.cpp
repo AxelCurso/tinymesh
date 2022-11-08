@@ -44,7 +44,7 @@ std::vector<Vector> Capsule::getPoints() const {
             toRet.push_back(currentPoints[i]);
     }
     //bottom half sphere
-    for (int i = 0; i < m_precision - 2; i++) {
+    for (int i = 0; i < m_precision - 1; i++) {
         angle += angleToAdd;
 
         double  currentRadius = sin(angle) * m_radius;
@@ -56,7 +56,8 @@ std::vector<Vector> Capsule::getPoints() const {
             toRet.push_back(currentPoints[j]);
     }
     //top half sphere
-    for (int i = 0; i < m_precision - 2; i++) {
+    angle = 0;
+    for (int i = 0; i < m_precision - 1; i++) {
         angle += angleToAdd;
 
         double  currentRadius = sin(angle) * m_radius;

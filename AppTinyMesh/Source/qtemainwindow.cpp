@@ -157,7 +157,7 @@ void MainWindow::sphere() {
 }
 
 void MainWindow::capsule() {
-    Mesh mesh = Mesh(Capsule(Vector(0,0,0), 3.0, 3.0, 10));
+    Mesh mesh = Mesh(Capsule(Vector(0,0,0), 3.0, 7.0, 100));
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());

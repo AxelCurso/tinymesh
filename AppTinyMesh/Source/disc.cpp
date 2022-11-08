@@ -25,7 +25,7 @@ std::vector<Vector> Disc::getPoints() const {
     angleToAdd = 2 * M_PI / m_precision;
     angle = 0;
     toRes.push_back(m_center);
-    for (int i = 0; i < m_precision+1; i++) {
+    for (int i = 0; i < m_precision; i++) {
         toRes.push_back(Vector(cos(angle) * m_radius, m_center[1], sin(angle) * m_radius));
         angle += angleToAdd;
     }
