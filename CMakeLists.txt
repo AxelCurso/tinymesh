@@ -59,6 +59,7 @@ add_executable(${APP} WIN32
     ${INC_DIR}/sphere.h
     ${INC_DIR}/capsule.h
     ${INC_DIR}/heightField.h
+    ${INC_DIR}/tore.h
 )
 set_target_properties(${APP} PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_CURRENT_BINARY_DIR})
 

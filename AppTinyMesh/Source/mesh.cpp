@@ -366,6 +366,27 @@ Mesh::Mesh(const Capsule &capsule) {
     }
 }
 
+Mesh::Mesh(const Tore &tore) {
+    auto    points = tore.getPoints();
+    auto    precision = tore.getPrecision();
+
+    vertices.resize(points.size());
+    for (int i = 0; i < precision; i++) {
+        for (int j = 0; j < precision; j++) {
+            vertices[i+j*precision] = points[i+j*precision];
+            normals.push_back(Normalized(points[i+j*precision]));
+        }
+    }
+
+    varray.reserve(points.size()*2);
+    narray.reserve(points.size()*2);
+
+    for (int i = 0; i < points.size(); i++) {
+        AddSmoothTriangle(i, i, (i+1)%points.size(), (i+1)%points.size(), (i+precision)%points.size(), (i+precision)%points.size());
+        AddSmoothTriangle((i+precision)%points.size(), (i+precision)%points.size(), (i+precision+1)%points.size(), (i+precision+1)%points.size(), (i+1)%points.size(), (i+1)%points.size());
+    }
+}
+
 Mesh::Mesh(const HeightField &hf) {
     auto    points = hf.getPoints();
     auto    height = hf.getHeight();

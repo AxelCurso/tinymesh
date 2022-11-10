@@ -32,6 +32,7 @@ public slots:
   void cylinder();
   void sphere();
   void capsule();
+  void tore();
 
   void heightField();
   void loadHF();

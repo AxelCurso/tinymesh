@@ -5,6 +5,7 @@
 #include "cylinder.h"
 #include "sphere.h"
 #include "capsule.h"
+#include "tore.h"
 #include "heightField.h"
 #include "ray.h"
 #include "mathematics.h"
@@ -129,6 +130,7 @@ public:
   explicit Mesh(const Cylinder&);
   explicit Mesh(const Sphere&);
   explicit Mesh(const Capsule&);
+  explicit Mesh(const Tore&);
 
   explicit Mesh(const HeightField&);
 
