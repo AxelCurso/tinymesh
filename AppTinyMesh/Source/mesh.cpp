@@ -249,7 +249,7 @@ Mesh::Mesh(const Cylinder &cylinder) {
     //1..n->points
     //n+1->center with height
     normals.push_back(Vector(0, -1, 0));
-    for (int i = 1; i < points.size()/2; i++) {
+    for (int i = 1; i < points.size(); i++) {
         normals.push_back(Normalized(vertices[i]-vertices[0]));
     }
     normals.push_back(Vector(0, 1, 0));
@@ -259,17 +259,17 @@ Mesh::Mesh(const Cylinder &cylinder) {
     narray.reserve(prec*4*3);
 
     for (int i = 1; i < prec; i++) {
-        AddTriangle(0, i, i+1, 0); //bottom
-        AddTriangle(prec+1, i+prec+1, i+prec+2, prec+2); //top
+        AddSmoothTriangle(0, 0, i, i, i+1, i+1); //bottom
+        AddSmoothTriangle(prec+1, i+prec+1, i+prec+1, i+prec+1, i+prec+2, i+prec+2); //top
 
-        AddTriangle(i, i+1, i+prec+1, i);
-        AddTriangle(i+prec+2, i+prec+1, i+1, (i+1)%prec);
+        AddSmoothTriangle(i, i, i+1, i+1, i+prec+1, i+prec+1);
+        AddSmoothTriangle(i+prec+2, i+prec+2, i+prec+1, i+prec+1, i+1, i+1);
     }
-    AddTriangle(0, prec, 1, 0);
-    AddTriangle(prec+1, prec*2+1, prec+2, prec+2);
+    AddSmoothTriangle(0, 0, prec, prec, 1, 1);
+    AddSmoothTriangle(prec+1, prec+1, prec*2+1, prec*2+1, prec+2, prec+2);
 
-    AddTriangle(prec, 1, prec*2+1, prec);
-    AddTriangle(prec+2, prec*2+1, 1, 1);
+    AddSmoothTriangle(prec, prec, 1, 1, prec*2+1, prec*2+1);
+    AddSmoothTriangle(prec+2, prec+2, prec*2+1, prec*2+1, 1, 1);
 }
 
 Mesh::Mesh(const Sphere &sphere) {
@@ -338,7 +338,7 @@ Mesh::Mesh(const Capsule &capsule) {
     //cylinder
     for (int i = 0; i < prec; i++) {
         AddTriangle(i, (i+1)%prec, prec+((1+i)%prec), i);
-        AddTriangle(i, prec+((1+i)%prec), prec+(i%prec), prec+1+i);
+        AddTriangle(i, prec+((1+i)%prec), prec+(i%prec), i);
     }
     //bottom half sphere
     for (int i = 0; i < prec-2; i++) {
@@ -349,7 +349,7 @@ Mesh::Mesh(const Capsule &capsule) {
     }
     for (int i = 0; i < prec; i++) {
         AddTriangle(points.size()-2, (prec*2) + i, (prec*2) + ((i+1)%prec), points.size()-2);
-        AddTriangle((i+1)%prec, (prec*2) + (prec-2)*prec + i, (prec*2) + (prec-2)*prec + ((i+1)%prec), i);
+        AddTriangle((i+1)%prec, (prec*2) + (prec-2)*prec + i, (prec*2) + (prec-2)*prec + ((i+1)%prec), (i+1)%prec);
         AddTriangle((i+1)%prec, i, (prec*2) + (prec-2)*prec + i, (i+1)%prec);
     }
     //top half sphere
@@ -377,9 +377,9 @@ Mesh::Mesh(const HeightField &hf) {
         vertices[i] = points[i];
 
     // Normals
-    for (auto p : points) {
+    /*for (auto p : points) {
         normals.push_back(Vector(0, -1, 0));
-    }
+    }*/
 
     // Reserve space for the triangles and place them
     varray.reserve(((height-1)*(width-1)) * 2);
@@ -404,6 +404,7 @@ Mesh::Mesh(const HeightField &hf) {
             AddSmoothTriangle(p1, p1, p4, p4, p2, p2);
         }
     }
+    SmoothNormals();
 }
 
 /*!
