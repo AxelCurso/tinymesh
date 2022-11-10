@@ -21,6 +21,7 @@ public:
     const int getWidth() const { return m_field.at(0).size(); }
     const int getHeight() const { return m_field.size(); }
     void setDistance(const double &d) { m_distance = d; }
+    const double getDistance() const { return m_distance; }
 
     std::vector<Vector> getPoints() const;
     void upScale() { m_scale *= 0.9; }
@@ -30,6 +31,8 @@ public:
     void exampleField();
     void smallExampleField();
     void mediumExampleField();
+
+    void applyElevation(const double& x, const double &y, const double &radius, const double &percentage);
 
 private:
     void outputDebug() const;

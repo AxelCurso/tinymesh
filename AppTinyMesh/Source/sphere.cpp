@@ -31,7 +31,7 @@ std::vector<Vector> Sphere::getPoints() const {
         angle += angleToAdd;
 
         double  currentRadius = sin(angle) * m_radius;
-        std::cout << i << "-" << currentRadius << std::endl;
+        std::cerr << i << "-" << currentRadius << std::endl;
         Vector  currentCenter = m_center - Vector(0, cos(angle) * m_radius, 0);
         Disc    currentDisc(currentCenter, currentRadius, m_precision);
 

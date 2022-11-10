@@ -102,3 +102,20 @@ void HeightField::outputDebug() const {
         std::cerr << std::endl;
     }
 }
+
+void HeightField::applyElevation(const double& x, const double &y, const double &radius, const double &percentage) {
+    for (int i = 0; i < m_field.size(); i++) {
+        for (int j = 0; j < m_field.at(i).size(); j++) {
+            double  xCurrent = j*m_distance;
+            double  yCurrent = i*m_distance;
+            double  lenToCenter = sqrt(((xCurrent-x)*(xCurrent-x)) + ((y-yCurrent)*(y-yCurrent)));
+
+            if (lenToCenter <= radius) {
+                double  ratio = lenToCenter / radius;
+                double  toSub = (1-ratio) * (percentage / 100) * m_field[i][j];
+
+                m_field[i][j] += toSub;
+            }
+        }
+    }
+}

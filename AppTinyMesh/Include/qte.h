@@ -39,8 +39,8 @@ public slots:
 
   void upHf();
   void downHf();
-
   void distanceSlider();
+  void applyElevation();
 
 private:
   HeightField   m_hf = HeightField(Vector(0,0,0), 0.1);

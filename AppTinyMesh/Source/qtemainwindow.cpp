@@ -4,6 +4,7 @@
 #include "heightField.h"
 
 #include <QFileDialog>
+#include <QElapsedTimer>
 
 MainWindow::MainWindow()
 {
@@ -51,6 +52,7 @@ void MainWindow::CreateActions()
     connect(uiw.hf_up, SIGNAL(clicked()), this, SLOT(upHf()));
     connect(uiw.hf_down, SIGNAL(clicked()), this, SLOT(downHf()));
     connect(uiw.hf_distanceSlider, SIGNAL(sliderReleased()), this, SLOT(distanceSlider()));
+    connect(uiw.hf_elevation_button, SIGNAL(clicked()), this, SLOT(applyElevation()));
 
 	// Widget edition
 	connect(meshWidget, SIGNAL(_signalEditSceneLeft(const Ray&)), this, SLOT(editingSceneLeft(const Ray&)));
@@ -122,7 +124,13 @@ void MainWindow::ResetCamera()
 }
 
 void MainWindow::disc() {
-    Mesh mesh = Mesh(Disc(Vector(0, 0, 0), 3.0, 250));
+    QElapsedTimer   timer;
+    timer.start();
+
+    Disc disc(Vector(0, 0, 0), 3.0, 250);
+
+    uiw.stats_precision->setText(QString::number(disc.getPrecision()));
+    Mesh mesh = Mesh(disc);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
@@ -131,10 +139,18 @@ void MainWindow::disc() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::cylinder() {
-    Mesh mesh = Mesh(Cylinder(Vector(0, 0, 0), 3.0, 100, 5.0));
+    QElapsedTimer   timer;
+    timer.start();
+
+    Cylinder cylinder(Vector(0, 0, 0), 3.0, 100, 5.0);
+
+    uiw.stats_precision->setText(QString::number(cylinder.getPrecision()));
+    Mesh mesh = Mesh(cylinder);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
@@ -143,9 +159,17 @@ void MainWindow::cylinder() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::sphere() {
+    QElapsedTimer   timer;
+    timer.start();
+
+    Sphere sphere(Vector(0,0,0), 3.0, 250);
+
+    uiw.stats_precision->setText(QString::number(sphere.getPrecision()));
     Mesh mesh = Mesh(Sphere(Vector(0,0,0), 3.0, 250));
 
     std::vector<Color> cols;
@@ -155,10 +179,18 @@ void MainWindow::sphere() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::capsule() {
-    Mesh mesh = Mesh(Capsule(Vector(0,0,0), 3.0, 7.0, 100));
+    QElapsedTimer   timer;
+    timer.start();
+
+    Capsule capsule(Vector(0,0,0), 3.0, 7.0, 100);
+
+    uiw.stats_precision->setText(QString::number(capsule.getPrecision()));
+    Mesh mesh = Mesh(capsule);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
@@ -167,10 +199,18 @@ void MainWindow::capsule() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::tore() {
-    Mesh mesh = Mesh(Tore(Vector(0,0,0), 1.0, 2.0, 10));
+    QElapsedTimer   timer;
+    timer.start();
+
+    Tore tore(Vector(0,0,0), 1.0, 2.0, 10);
+
+    uiw.stats_precision->setText(QString::number(tore.getPrecision()));
+    Mesh mesh = Mesh(tore);
 
     std::vector<Color> cols;
     cols.resize(mesh.Vertexes());
@@ -179,11 +219,22 @@ void MainWindow::tore() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::heightField() {
+    QElapsedTimer   timer;
+    timer.start();
+
     m_hf.mediumExampleField();
     m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
+
+    uiw.hf_elevation_x->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getWidth()*m_hf.getDistance()));
+    uiw.hf_elevation_y->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getHeight()*m_hf.getDistance()));
+
+    uiw.stats_precision->setText(QString());
+
     Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
@@ -193,13 +244,23 @@ void MainWindow::heightField() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::loadHF() {
+    QElapsedTimer   timer;
+    timer.start();
+
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "../");
     m_hf.loadField(fileName.toStdString());
     m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
 
+    uiw.hf_elevation_x->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getWidth()*m_hf.getDistance()));
+    uiw.hf_elevation_y->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getHeight()*m_hf.getDistance()));
+
+    uiw.stats_precision->setText(QString());
+
     Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
@@ -209,11 +270,16 @@ void MainWindow::loadHF() {
 
     meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
     UpdateGeometry();
+
+    uiw.stats_time->setText(QString::number(timer.elapsed()) + QString::fromUtf8(" ms."));
 }
 
 void MainWindow::upHf() {
     std::cerr << "up hf" << std::endl;
     m_hf.upScale();
+
+    uiw.hf_elevation_x->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getWidth()*m_hf.getDistance()));
+    uiw.hf_elevation_y->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getHeight()*m_hf.getDistance()));
 
     Mesh mesh = Mesh(m_hf);
 
@@ -230,6 +296,9 @@ void MainWindow::downHf() {
     std::cerr << "down hf" << std::endl;
     m_hf.downScale();
 
+    uiw.hf_elevation_x->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getWidth()*m_hf.getDistance()));
+    uiw.hf_elevation_y->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getHeight()*m_hf.getDistance()));
+
     Mesh mesh = Mesh(m_hf);
 
     std::vector<Color> cols;
@@ -243,6 +312,35 @@ void MainWindow::downHf() {
 
 void MainWindow::distanceSlider() {
     m_hf.setDistance((double)uiw.hf_distanceSlider->value()/100.0);
+
+    uiw.hf_elevation_x->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getWidth()*m_hf.getDistance()));
+    uiw.hf_elevation_y->setPlaceholderText(QString::fromUtf8("0 -> ") + QString::number(m_hf.getHeight()*m_hf.getDistance()));
+
+    Mesh mesh = Mesh(m_hf);
+
+    std::vector<Color> cols;
+    cols.resize(mesh.Vertexes());
+    for (int i = 0; i < cols.size(); i++)
+        cols[i] = Color(double(i) / 6.0, fmod(double(i) * 39.478378, 1.0), 0.0);
+
+    meshColor = MeshColor(mesh, cols, mesh.VertexIndexes());
+    UpdateGeometry();
+}
+
+void MainWindow::applyElevation() {
+    //we display a height field at the moment
+    if (m_hf.getWidth()*m_hf.getDistance() < uiw.hf_elevation_x->text().toDouble()
+            || uiw.hf_elevation_x->text().toDouble() < 0
+            || m_hf.getHeight()*m_hf.getDistance() < uiw.hf_elevation_y->text().toDouble()
+            || uiw.hf_elevation_y->text().toDouble() < 0)
+        return; //checks the center point is in the field
+
+    if (uiw.hf_elevation_percentage->text().toDouble() < -100
+            || uiw.hf_elevation_percentage->text().toDouble() > 100)
+        return; //checks the percentage
+
+    m_hf.applyElevation(uiw.hf_elevation_x->text().toDouble(), uiw.hf_elevation_y->text().toDouble(),
+                        uiw.hf_elevation_radius->text().toDouble(), uiw.hf_elevation_percentage->text().toDouble());
 
     Mesh mesh = Mesh(m_hf);
 

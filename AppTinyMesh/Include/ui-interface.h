@@ -73,6 +73,22 @@ public:
     QPushButton *hf_down;
     QLabel      *hf_distanceLabel;
     QSlider     *hf_distanceSlider;
+    QGroupBox   *hf_gb_elevation;
+    QLabel      *hf_elevation_x_label;
+    QLabel      *hf_elevation_y_label;
+    QLineEdit   *hf_elevation_x;
+    QLineEdit   *hf_elevation_y;
+    QLabel      *hf_elevation_radius_label;
+    QLineEdit   *hf_elevation_radius;
+    QLabel      *hf_elevation_percentage_label;
+    QLineEdit   *hf_elevation_percentage;
+    QPushButton *hf_elevation_button;
+
+    QGroupBox   *gb_stats;
+    QLabel      *stats_precision_label;
+    QLineEdit   *stats_precision;
+    QLabel      *stats_time_label;
+    QLineEdit   *stats_time;
 
     void setupUi(QMainWindow *Assets)
     {
@@ -207,7 +223,7 @@ public:
 
         gb_hf = new QGroupBox(Parameters_groupBox);
         gb_hf->setObjectName(QString::fromUtf8("gb_hf"));
-        gb_hf->setGeometry(QRect(10, 150, 430, 121));
+        gb_hf->setGeometry(QRect(10, 150, 430, 370));
         hf_up = new QPushButton(gb_hf);
         hf_up->setObjectName(QString::fromUtf8("upButton"));
         hf_up->setGeometry(QRect(10, 20, 200, 30));
@@ -227,6 +243,55 @@ public:
         hf_distanceSlider->setMaximum(1000);
         hf_distanceSlider->setSingleStep(1);
         hf_distanceSlider->setValue(50);
+
+        hf_gb_elevation = new QGroupBox(gb_hf);
+        hf_gb_elevation->setObjectName(QString::fromUtf8("hfElevationGb"));
+        hf_gb_elevation->setGeometry(10, 100, 420, 260);
+        hf_elevation_x_label = new QLabel(hf_gb_elevation);
+        hf_elevation_x_label->setObjectName(QString::fromUtf8("xlabel"));
+        hf_elevation_x_label->setGeometry(10, 20, 60, 30);
+        hf_elevation_x = new QLineEdit(hf_gb_elevation);
+        hf_elevation_x->setObjectName(QString::fromUtf8("xValue"));
+        hf_elevation_x->setGeometry(75, 20, 130, 30);
+        hf_elevation_y_label = new QLabel(hf_gb_elevation);
+        hf_elevation_y_label->setObjectName(QString::fromUtf8("xlabel"));
+        hf_elevation_y_label->setGeometry(215, 20, 60, 30);
+        hf_elevation_y = new QLineEdit(hf_gb_elevation);
+        hf_elevation_y->setObjectName(QString::fromUtf8("xValue"));
+        hf_elevation_y->setGeometry(280, 20, 130, 30);
+        hf_elevation_radius_label = new QLabel(hf_gb_elevation);
+        hf_elevation_radius_label->setObjectName(QString::fromUtf8("radiusLabel"));
+        hf_elevation_radius_label->setGeometry(10, 60, 400, 30);
+        hf_elevation_radius = new QLineEdit(hf_gb_elevation);
+        hf_elevation_radius->setObjectName(QString::fromUtf8("radiusValue"));
+        hf_elevation_radius->setGeometry(10, 100, 400, 30);
+        hf_elevation_percentage_label = new QLabel(hf_gb_elevation);
+        hf_elevation_percentage_label->setObjectName(QString::fromUtf8("percentageLabel"));
+        hf_elevation_percentage_label->setGeometry(10, 140, 400, 30);
+        hf_elevation_percentage = new QLineEdit(hf_gb_elevation);
+        hf_elevation_percentage->setObjectName(QString::fromUtf8("percentageValue"));
+        hf_elevation_percentage->setGeometry(10, 180, 400, 30);
+        hf_elevation_percentage->setPlaceholderText(QString::fromUtf8("-100% -> +100%"));
+        hf_elevation_button = new QPushButton(hf_gb_elevation);
+        hf_elevation_button->setObjectName(QString::fromUtf8("elevationButton"));
+        hf_elevation_button->setGeometry(QRect(10, 220, 400, 30));
+        hf_elevation_button->setChecked(false);
+
+        gb_stats = new QGroupBox(Parameters_groupBox);
+        gb_stats->setObjectName(QString::fromUtf8("gb_stats"));
+        gb_stats->setGeometry(QRect(10, 530, 430, 100));
+        stats_precision_label = new QLabel(gb_stats);
+        stats_precision_label->setObjectName(QString::fromUtf8("statsPrecisionLabel"));
+        stats_precision_label->setGeometry(10, 20, 200, 30);
+        stats_precision = new QLineEdit(gb_stats);
+        stats_precision->setObjectName(QString::fromUtf8("statsPrecisionValue"));
+        stats_precision->setGeometry(220, 20, 200, 30);
+        stats_time_label = new QLabel(gb_stats);
+        stats_time_label->setObjectName(QString::fromUtf8("statsTimeLabel"));
+        stats_time_label->setGeometry(10, 60, 200, 30);
+        stats_time = new QLineEdit(gb_stats);
+        stats_time->setObjectName(QString::fromUtf8("statsTimeValue"));
+        stats_time->setGeometry(220, 60, 200, 30);
 
         hboxLayout->addWidget(Parameters_groupBox);
 
@@ -310,6 +375,24 @@ public:
         hf_up->setText(QCoreApplication::translate("Assets", "Up elevation", nullptr));
         hf_down->setText(QCoreApplication::translate("Assets", "Down elevation", nullptr));
         hf_distanceLabel->setText(QCoreApplication::translate("Assets", "Distance label", nullptr));
+
+        hf_gb_elevation->setTitle(QCoreApplication::translate("Assets", "Height Field elevation", nullptr));
+        hf_elevation_x_label->setText(QCoreApplication::translate("Assets", "x position", nullptr));
+        hf_elevation_x->setText(QString());
+        hf_elevation_y_label->setText(QCoreApplication::translate("Assets", "y position", nullptr));
+        hf_elevation_y->setText(QString());
+        hf_elevation_radius_label->setText(QCoreApplication::translate("Assets", "Radius to affect", nullptr));
+        hf_elevation_radius->setText(QString());
+        hf_elevation_percentage_label->setText(QCoreApplication::translate("Assets", "Percentage of elevation", nullptr));
+        hf_elevation_percentage->setText(QString());
+        hf_elevation_button->setText(QCoreApplication::translate("Assets", "Apply", nullptr));
+
+        gb_stats->setTitle(QCoreApplication::translate("Assets", "Mesh stats", nullptr));
+        stats_precision_label->setText(QCoreApplication::translate("Assets", "Precision of the mesh: ", nullptr));
+        stats_precision->setText(QString());
+        stats_time_label->setText(QCoreApplication::translate("Assets", "Generation time: ", nullptr));
+        stats_time->setText(QString());
+
     } // retranslateUi
 
 };
