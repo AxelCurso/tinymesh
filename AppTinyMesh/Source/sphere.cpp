@@ -1,4 +1,4 @@
-// Disc
+// Sphere
 
 // Self include
 #include "sphere.h"
@@ -12,7 +12,7 @@
 The class stores the center of the sphere, as well as the radius
 and the precision we want.
 
-The vertices of a sphere can be obtained by the Box::getPoints()
+The vertices of a sphere can be obtained by the Sphere::getPoints()
 member function which returns a vector of all the vertices.
 */
 
